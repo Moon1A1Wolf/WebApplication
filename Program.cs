@@ -1,7 +1,54 @@
+using Microsoft.EntityFrameworkCore;
+using WebApplication1.Data;
+using WebApplication1.Services.Kdf;
+using WebApplication1.Services.FileName;
+using WebApplication1.Services.OTP;
+using WebApplication1.Servises.Hash;
+using Microsoft.Extensions.FileProviders;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+/* Місце для реєстрації служб - між builder та його використанням
+ * Реєстрація - співставлення інткрфейсу з класом за формулою 
+ * "Буде запит на IHashService - видати об'єкти класу Md5HashService" 
+ */
+//builder.Services.AddSingleton<IHashService, Md5HashService>();
+builder.Services.AddSingleton<IHashService, ShaHashService>();
+builder.Services.AddSingleton<IKdfService, Pbkdf1Service>();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options => 
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10); 
+    options.Cookie.HttpOnly = true; 
+    options.Cookie.IsEssential = true; 
+});
+
+// Реєстрація контекста даних
+builder.Services.AddDbContext<DataContext>( options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("LocalDb")
+        )
+);
+
+
+// Реєстрація 6-цифрового OTP сервісу
+builder.Services.AddTransient<IOTPGenerator, OTPRandomSix>();
+// Реєстрація 4-цифрового OTP сервісу
+builder.Services.AddTransient<IOTPGenerator, OTPRandomFour>();
+
+
+// Реєстрація сервісу генерації імен файлів
+builder.Services.AddTransient<IFileNameGenerator, FileNameGenerator>();
+
+
+// Реєстрація сервісу для використання TempData з сесією
+builder.Services.AddSession();
+builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 
@@ -16,12 +63,24 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/Uploads"
+});
+
 app.UseRouting();
+
+app.UseSession(); // використання сесій
+
+app.MapControllers();
 
 app.UseAuthorization();
 
 app.MapControllerRoute(  //маршрутизатор
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();
