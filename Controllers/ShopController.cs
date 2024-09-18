@@ -3,15 +3,6 @@ using WebApplication1.Data.Entities;
 using WebApplication1.Models.Shop;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApplication1.Services.Upload;
-using System.Security.Claims;
-using System.Text.Json.Nodes;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using WebApplication1.Services.Kdf;
-using WebApplication1.Models.Group;
-using WebApplication1.Models.Api;
-using WebApplication1.Models.Cart;
 
 namespace WebApplication1.Controllers
 {
