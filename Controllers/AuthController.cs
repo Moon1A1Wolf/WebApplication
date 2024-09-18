@@ -90,22 +90,26 @@ namespace WebApplication1.Controllers
 
             if (user != null && _kdfService.DerivedKey(password, user.Salt) == user.Dk)
             {
-                // генеруємо токен
-                Token token = new()
+                Token token = _dataContext.Tokens.FirstOrDefault(t => t.UserId == user.Id);
+
+                if (token == null)
                 {
-                    Id = Guid.NewGuid(),
-                    UserId = user.Id,
-                    ExpiresAt = DateTime.Now.AddHours(3),
-                };
-                _dataContext.Tokens.Add(token);
-                _dataContext.SaveChanges();
-                // зберігаємо токен у сесії
+                    token = new Token
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = user.Id,
+                        ExpiresAt = DateTime.Now.AddHours(3),
+                    };
+                    _dataContext.Tokens.Add(token);
+                    _dataContext.SaveChanges();
+                }
+
                 HttpContext.Session.SetString("token", token.Id.ToString());
                 return new
                 {
                     status = "Ok",
                     code = 200,
-                    message = token.Id  // передаємо токен клієнту
+                    message = token.Id
                 };
             }
             else

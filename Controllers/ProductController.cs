@@ -4,6 +4,7 @@ using WebApplication1.Models.Shop;
 using WebApplication1.Services.Upload;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace WebApplication1.Controllers
 {
@@ -15,8 +16,15 @@ namespace WebApplication1.Controllers
         private readonly DataContext _dataContext = dataContext;
 
         [HttpPost]
+
         public async Task<object> DoPost(ShopProductFormModel formModel)
         {
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (userRole != "Admin")
+            {
+                return new { code = 403, status = "Forbidden", message = "You do not have permission to add products." };
+            }
             String uploadedName;
             try
             {

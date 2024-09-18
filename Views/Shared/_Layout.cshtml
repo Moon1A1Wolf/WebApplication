@@ -79,9 +79,14 @@
         </main>
     </div>
     <footer class="border-top footer text-muted">
+        @if (isAuthenticated){
+        <div class="container">
+            &copy; 2024; авторизовано для "@Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value" (@Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value) - ASP_P15 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>}
+        else {
         <div class="container">
             &copy; 2024 - ASP_P15 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+        </div>}
     </footer>
 
 
