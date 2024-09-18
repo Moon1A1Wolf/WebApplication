@@ -25,7 +25,7 @@ namespace WebApplication1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Token", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Token", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -42,7 +42,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("Tokens");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.User", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.User", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
