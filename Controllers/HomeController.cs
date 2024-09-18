@@ -1,12 +1,17 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using WebApplication1.Data;
 using WebApplication1.Models;
 using WebApplication1.Models.Home;
+using WebApplication1.Models.Shop;
 using WebApplication1.Services.FileName;
+using WebApplication1.Services.Kdf;
 using WebApplication1.Services.OTP;
 using WebApplication1.Servises.Hash;
 //using WebApplication1.Views.Home;
@@ -19,38 +24,71 @@ namespace WebApplication1.Controllers
         private readonly ILogger<HomeController> _logger;
         // інжектуємо нащ (хеш-) сервіс
         private readonly IHashService _hashService;
+        private readonly DataContext _dataContext;
+        private readonly IKdfService _kdfService;
+
         private String fileErrorKey = "file-error";
         private String fileNameKey = "file-name";
 
-        //public HomeController(ILogger<HomeController> logger, IHashService hashService)
-        //{
-        //    _logger = logger;
-        //    _hashService = hashService;
-        /* Інжекція через конструктор - найбільш рекомендований варіант.
-         * Контроллер служб (інжектор) аналізує параметри конструктора і 
-         * сам підставляє до нього необхідні об'єкти (інстанси) служб
-         */
-        //}
+        public HomeController(ILogger<HomeController> logger, IHashService hashService, DataContext dataContext, IKdfService kdfService)
+        {
+            _logger = logger;
+            _hashService = hashService;
+            _dataContext = dataContext;
+            _kdfService = kdfService;
+            /* Інжекція через конструктор - найбільш рекомендований варіант.
+             * Контроллер служб (інжектор) аналізує параметри конструктора і 
+             * сам підставляє до нього необхідні об'єкти (інстанси) служб
+             */
+        }
 
 
-        //private readonly IOTPGenerator _otpGenerator;
+            //private readonly IOTPGenerator _otpGenerator;
 
-        //public HomeController(IOTPGenerator otpGenerator)
-        //{
-        //    _otpGenerator = otpGenerator;
-        //}
+            //public HomeController(IOTPGenerator otpGenerator)
+            //{
+            //    _otpGenerator = otpGenerator;
+            //}
 
 
-        //private readonly IFileNameGenerator _fileNameGenerator;
+            //private readonly IFileNameGenerator _fileNameGenerator;
 
-        //public HomeController(IFileNameGenerator fileNameGenerator)
-        //{
-        //    _fileNameGenerator=fileNameGenerator;
-        //}
+            //public HomeController(IFileNameGenerator fileNameGenerator)
+            //{
+            //    _fileNameGenerator=fileNameGenerator;
+            //}
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult Shop()
+        {
+            return RedirectToAction("Index", "Shop");
+        }
+
+        public IActionResult Profile()
+        {
+            // if (HttpContext.User.Identity?.IsAuthenticated == true)
+            if (HttpContext.User.Identity?.IsAuthenticated ?? false)
+            {
+                String sid = HttpContext
+                    .User
+                    .Claims
+                    .First(c => c.Type == ClaimTypes.Sid)
+                    .Value;
+
+                return View(new ProfilePageModel()
+                {
+                    User = _dataContext
+                        .Users
+                        .Include(u => u.Feedbacks)
+                            .ThenInclude(f => f.Product)
+                        .First(u => u.Id.ToString() == sid),
+                });
+            }
+            return RedirectToAction(nameof(this.Index));
         }
 
         public IActionResult Privacy()
@@ -62,6 +100,7 @@ namespace WebApplication1.Controllers
         {
             return View();
         }
+
 		public IActionResult Razor()
 		{
 			return View();
@@ -188,11 +227,6 @@ namespace WebApplication1.Controllers
             return RedirectToAction("AddProduct");
         }
 
-        public IActionResult Shop()
-        {
-            return View();
-        }
-
         public IActionResult SignUp()
         {
             SignUpPageModel model = new();
@@ -206,6 +240,23 @@ namespace WebApplication1.Controllers
 
                 model.FormModel = formModel;
                 model.ValidationErrors = _Validate(formModel);
+
+                if (model.ValidationErrors.Where(p => p.Value != null).Count() == 0)
+                {
+                    // íåìàº ïîìèëîê âàë³äàö³¿ - ðåºñòðóºìî ó ÁÄ
+                    String salt = _hashService.Digest(Guid.NewGuid().ToString())[..20];
+                    _dataContext.Users.Add(new()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = formModel.UserName,
+                        Email = formModel.UserEmail,
+                        Salt = salt,
+                        Dk = _kdfService.DerivedKey(formModel.UserPassword, salt),
+                        Registered = DateTime.Now,
+                        Avatar = HttpContext.Session.GetString(fileNameKey)
+                    });
+                    _dataContext.SaveChanges();
+                }
 
                 ViewData["data"] = $"email: {formModel.UserEmail}, name: {formModel.UserName}";
 
@@ -303,6 +354,7 @@ namespace WebApplication1.Controllers
         public IActionResult Download ([FromRoute] String id)
         {
             // id закладена в маршрутизаторі назва, суть - ім'я файлу
+            id = id.Replace('_', '/');
             String filename = $"./Uploads/{id}";
             if (System.IO.File.Exists(filename))
             {
@@ -362,7 +414,7 @@ namespace WebApplication1.Controllers
                 {
                     parts.Add(" однин спецсимвол");
                 }
-                if(parts.Count > 0)
+                if (parts.Count > 0)
                 {
                     res[nameof(model.UserPassword)] =
                         "Пароль повинен містити щонайменше" + String.Join(',', parts);
@@ -382,7 +434,7 @@ namespace WebApplication1.Controllers
                 : "Необхідно прийняти правила сайту";
 
             //Результати перевірки файлу збережені у сесії
-            if(HttpContext.Session.Keys.Contains(fileErrorKey)) 
+            if (HttpContext.Session.Keys.Contains(fileErrorKey)) 
             {
                 res[nameof(model.UserAvatar)] = HttpContext.Session.GetString(fileErrorKey);
                 HttpContext.Session.Remove(fileErrorKey);

@@ -1,47 +1,33 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>WebApplication1</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Uploads\0123c58e-98e7-4332-ba46-726aeeec2e89.png" />
-    <None Remove="Uploads\02347f0e-feab-49b7-b6fd-8f6ae13345c3.png" />
-    <None Remove="Uploads\0c6ff727-1937-4ab3-bbbc-4abb96183d24.png" />
-    <None Remove="Uploads\0c8e3f9e-714d-4a49-9cce-0f315c88f5a5.png" />
-    <None Remove="Uploads\172ed575-a0f7-4a85-845e-c17a10c20720.png" />
-    <None Remove="Uploads\17fbee25-8d7f-4d00-bc13-26073fa74d16.png" />
-    <None Remove="Uploads\2cccc542-3ea2-4767-82aa-cd84bc6cfe1d.png" />
-    <None Remove="Uploads\30263bdd-82ba-41bf-830f-80328f00a522.png" />
-    <None Remove="Uploads\37580e7d-4aeb-4386-b659-a5452f70c99e.png" />
-    <None Remove="Uploads\501cff94-93bf-41cd-b568-91fb92d78059.png" />
-    <None Remove="Uploads\6245fa9b-61fa-4bb3-aa31-eb2be4c5f849.png" />
-    <None Remove="Uploads\6496b410-6afb-4309-bd6a-48532fcc5b18.png" />
-    <None Remove="Uploads\8e569d0e-98bc-49ca-ad00-02c8542f5316.png" />
-    <None Remove="Uploads\952b90d2-7d54-40a1-bd9e-281792688419.png" />
-    <None Remove="Uploads\9c870d80-f244-4208-96f9-ba029b9cc708.png" />
-    <None Remove="Uploads\a3643ec4-74aa-486e-910e-ffb4ff12e424.png" />
-    <None Remove="Uploads\aa1ff1b6-8732-45aa-a8d3-0243d8290353.png" />
-    <None Remove="Uploads\b6d44a04-1f99-4b9f-b635-749572301ee2.png" />
-    <None Remove="Uploads\f3fcda77-40f0-4946-aea2-ddb7c894bbfd.png" />
-    <None Remove="Uploads\f8278833-afeb-4c5d-b736-c479ccfc9bd6.png" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="Views\Home\Profile1.cshtml" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\img\upload\" />
-    <Folder Include="Uploads\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Uploads\Shop\" />
+		<Folder Include="Views\Home\DisplayTemplates\" />
+		<Folder Include="wwwroot\img\upload\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="8.0.4" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Views\Home\Profile1.cshtml" />
+	</ItemGroup>
 
 </Project>

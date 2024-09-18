@@ -5,6 +5,8 @@ using WebApplication1.Services.FileName;
 using WebApplication1.Services.OTP;
 using WebApplication1.Servises.Hash;
 using Microsoft.Extensions.FileProviders;
+using WebApplication1.Services.Upload;
+using WebApplication1.Middleware.SessionAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +20,12 @@ builder.Services.AddControllersWithViews();
 //builder.Services.AddSingleton<IHashService, Md5HashService>();
 builder.Services.AddSingleton<IHashService, ShaHashService>();
 builder.Services.AddSingleton<IKdfService, Pbkdf1Service>();
+builder.Services.AddSingleton<IFileUploader, FileUploadService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => 
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(10); 
+    options.IdleTimeout = TimeSpan.FromHours(3); 
     options.Cookie.HttpOnly = true; 
     options.Cookie.IsEssential = true; 
 });
@@ -35,19 +38,19 @@ builder.Services.AddDbContext<DataContext>( options =>
 );
 
 
-// Реєстрація 6-цифрового OTP сервісу
-builder.Services.AddTransient<IOTPGenerator, OTPRandomSix>();
-// Реєстрація 4-цифрового OTP сервісу
-builder.Services.AddTransient<IOTPGenerator, OTPRandomFour>();
+//// Реєстрація 6-цифрового OTP сервісу
+//builder.Services.AddTransient<IOTPGenerator, OTPRandomSix>();
+//// Реєстрація 4-цифрового OTP сервісу
+//builder.Services.AddTransient<IOTPGenerator, OTPRandomFour>();
 
 
-// Реєстрація сервісу генерації імен файлів
-builder.Services.AddTransient<IFileNameGenerator, FileNameGenerator>();
+//// Реєстрація сервісу генерації імен файлів
+//builder.Services.AddTransient<IFileNameGenerator, FileNameGenerator>();
 
 
-// Реєстрація сервісу для використання TempData з сесією
-builder.Services.AddSession();
-builder.Services.AddControllersWithViews();
+//// Реєстрація сервісу для використання TempData з сесією
+//builder.Services.AddSession();
+//builder.Services.AddControllersWithViews();
 
 
 var app = builder.Build();
@@ -62,21 +65,19 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
+app.UseSession();
 
-app.UseStaticFiles(new StaticFileOptions
+app.UseSessionAuth();
+
+/*app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
             Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
     RequestPath = "/Uploads"
 });
-
-app.UseRouting();
-
-app.UseSession(); // використання сесій
-
-app.MapControllers();
-
-app.UseAuthorization();
+*/
 
 app.MapControllerRoute(  //маршрутизатор
     name: "default",

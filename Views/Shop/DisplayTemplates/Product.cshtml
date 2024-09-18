@@ -1,0 +1,32 @@
+﻿@model WebApplication1.Data.Entities.Product
+@using System.Security.Claims
+@{
+    bool isAuthenticated = Context.User.Identity?.IsAuthenticated ?? false;
+    String? userId = Context.User.Claims
+        .FirstOrDefault(c => c.Type == ClaimTypes.Sid)
+        ?.Value;
+}
+<div class="product-card">
+    <a asp-action="Product" asp-route-id="@(Model.Slug ?? Model.Id.ToString())">
+        <div class="product-img-container">
+            <img src="/Home/Download/Shop_@(Model.Image)" alt="Picture" />
+        </div>
+        <div class="product-info-container">
+            <h2>
+                @Model.Name
+            </h2>
+            <p>
+                @Model.Description
+            </p>
+            <h3>
+                ₴@Model.Price
+            </h3>
+        </div>
+    </a>
+    <button class="btn btn-outline-success"
+            data-product-id="@Model.Id"
+            data-user-id="@userId"
+            data-role="add-to-cart">
+        <i class="bi bi-cart3"></i> До кошику
+    </button>
+</div>
