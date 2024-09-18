@@ -131,7 +131,7 @@ namespace WebApplication1.Controllers
         //    return View();
         //}
 
-
+	/*
         [HttpGet]
         public IActionResult AddProduct()
         {
@@ -150,7 +150,7 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            if (product != null/* && !string.IsNullOrEmpty(product.Name)*/)
+            if (product != null/* && !string.IsNullOrEmpty(product.Name))
             {
                 ViewBag.Message = "Останні передані дані:";
                 ViewBag.Product5 = HttpContext.Session.GetString("Product");
@@ -224,6 +224,7 @@ namespace WebApplication1.Controllers
             HttpContext.Session.SetString("Product", JsonSerializer.Serialize(dictionary));
             return RedirectToAction("AddProduct");
         }
+	*/
 
         public IActionResult SignUp()
         {
