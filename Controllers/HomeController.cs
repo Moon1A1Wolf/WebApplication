@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -100,10 +99,10 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-		public IActionResult Razor()
-		{
-			return View();
-		}
+	public IActionResult Razor()
+	{
+	     return View();
+	}
 
         public IActionResult URL()
         {
