@@ -25,7 +25,7 @@ namespace WebApplication1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Cart", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Cart", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("Carts");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.CartProduct", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.CartProduct", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -74,7 +74,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("CartProducts");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Feedback", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Feedback", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -105,7 +105,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("Feedbacks");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Product", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Product", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -147,7 +147,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("Products");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.ProductGroup", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.ProductGroup", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -179,7 +179,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("Groups");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Token", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Token", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -196,7 +196,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("Tokens");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.User", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.User", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -238,24 +238,24 @@ namespace WebApplication1.Migrations
                 b.ToTable("Users");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Cart", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Cart", b =>
             {
-                b.HasOne("ASP_P15.Data.Entities.User", null)
+                b.HasOne("WebApplication1.Data.Entities.User", null)
                     .WithMany("Carts")
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.CartProduct", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.CartProduct", b =>
             {
-                b.HasOne("ASP_P15.Data.Entities.Cart", "Cart")
+                b.HasOne("WebApplication1.Data.Entities.Cart", "Cart")
                     .WithMany("CartProducts")
                     .HasForeignKey("CartId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("ASP_P15.Data.Entities.Product", "Product")
+                b.HasOne("WebApplication1.Data.Entities.Product", "Product")
                     .WithMany()
                     .HasForeignKey("ProductId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -266,15 +266,15 @@ namespace WebApplication1.Migrations
                 b.Navigation("Product");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Feedback", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Feedback", b =>
             {
-                b.HasOne("ASP_P15.Data.Entities.Product", "Product")
+                b.HasOne("WebApplication1.Data.Entities.Product", "Product")
                     .WithMany("Feedbacks")
                     .HasForeignKey("ProductId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("ASP_P15.Data.Entities.User", "User")
+                b.HasOne("WebApplication1.Data.Entities.User", "User")
                     .WithMany("Feedbacks")
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -285,9 +285,9 @@ namespace WebApplication1.Migrations
                 b.Navigation("User");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Product", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Product", b =>
             {
-                b.HasOne("ASP_P15.Data.Entities.ProductGroup", "Group")
+                b.HasOne("WebApplication1.Data.Entities.ProductGroup", "Group")
                     .WithMany("Products")
                     .HasForeignKey("GroupId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -296,22 +296,22 @@ namespace WebApplication1.Migrations
                 b.Navigation("Group");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Cart", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Cart", b =>
             {
                 b.Navigation("CartProducts");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Product", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Product", b =>
             {
                 b.Navigation("Feedbacks");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.ProductGroup", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.ProductGroup", b =>
             {
                 b.Navigation("Products");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.User", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.User", b =>
             {
                 b.Navigation("Carts");
 

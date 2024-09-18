@@ -25,7 +25,7 @@ namespace WebApplication1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Product", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Product", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("Products");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.ProductGroup", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.ProductGroup", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -91,7 +91,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("Groups");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Token", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Token", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -108,7 +108,7 @@ namespace WebApplication1.Migrations
                 b.ToTable("Tokens");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.User", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.User", b =>
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -150,9 +150,9 @@ namespace WebApplication1.Migrations
                 b.ToTable("Users");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.Product", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.Product", b =>
             {
-                b.HasOne("ASP_P15.Data.Entities.ProductGroup", "Group")
+                b.HasOne("WebApplication1.Data.Entities.ProductGroup", "Group")
                     .WithMany("Products")
                     .HasForeignKey("GroupId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -161,7 +161,7 @@ namespace WebApplication1.Migrations
                 b.Navigation("Group");
             });
 
-            modelBuilder.Entity("ASP_P15.Data.Entities.ProductGroup", b =>
+            modelBuilder.Entity("WebApplication1.Data.Entities.ProductGroup", b =>
             {
                 b.Navigation("Products");
             });

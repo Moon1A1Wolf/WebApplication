@@ -10,6 +10,7 @@ using WebApplication1.Services.Kdf;
 
 namespace WebApplication1.Controllers
 {
+
     [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -39,12 +40,53 @@ namespace WebApplication1.Controllers
             }
             // Розшифрувати DK неможливо, тому повторюємо розрахунок DK з сіллю, що
             // зберігається у користувача, та паролем, який передано у параметрі
+            bool isEmail;
+            var trimmedEmail = email.Trim();
 
-            var user = _dataContext
-                .Users
-                .FirstOrDefault(u =>
-                    u.Email == email &&
-                    u.DeleteDt == null);  // додаємо умову, що користувач не видалений
+            if (trimmedEmail.EndsWith("."))
+            {
+                isEmail = false;
+            }
+            else 
+            {
+                try
+                {
+                    var addr = new System.Net.Mail.MailAddress(trimmedEmail);
+                    isEmail = true;
+                }
+                catch
+                {
+                    isEmail = false;
+                }
+            }
+
+            User user;
+            DateTime birthDate;
+            if (isEmail)
+            {
+                user = _dataContext
+                    .Users
+                    .FirstOrDefault(u =>
+                        u.Email == trimmedEmail &&
+                        u.DeleteDt == null);  // додаємо умову, що користувач не видалений
+            }
+            else if (DateTime.TryParse(email, out birthDate))
+            {
+                user = _dataContext
+                    .Users
+                    .FirstOrDefault(u =>
+                        u.Birthdate == birthDate &&
+                        u.DeleteDt == null);  // додаємо умову, що користувач не видалений
+            }
+            else
+            {
+                user = _dataContext
+                    .Users
+                    .FirstOrDefault(u =>
+                        u.Name == email &&
+                        u.DeleteDt == null);  // додаємо умову, що користувач не видалений
+
+            }
 
             if (user != null && _kdfService.DerivedKey(password, user.Salt) == user.Dk)
             {

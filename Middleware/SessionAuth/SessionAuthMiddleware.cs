@@ -27,7 +27,8 @@ namespace WebApplication1.Middleware.SessionAuth
                 // вилучаємо ID токена з сесійного сховища
                 String tokenId = context.Session.GetString("token")!;
                 // переводимо до GUID
-                Guid id = Guid.Parse(tokenId);
+                Guid id;
+                bool valid = Guid.TryParse(tokenId, out id);
                 // шукаємо у БД і перевіряємо чи знайдений
                 if (dataContext.Tokens.Find(id) is Data.Entities.Token token)
                 {

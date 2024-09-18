@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -14,7 +13,6 @@ using WebApplication1.Services.FileName;
 using WebApplication1.Services.Kdf;
 using WebApplication1.Services.OTP;
 using WebApplication1.Servises.Hash;
-//using WebApplication1.Views.Home;
 
 namespace WebApplication1.Controllers
 {
@@ -134,6 +132,7 @@ namespace WebApplication1.Controllers
         //}
 
 
+        /*
         [HttpGet]
         public IActionResult AddProduct()
         {
@@ -152,7 +151,7 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            if (product != null/* && !string.IsNullOrEmpty(product.Name)*/)
+            if (product != null/* && !string.IsNullOrEmpty(product.Name))
             {
                 ViewBag.Message = "Останні передані дані:";
                 ViewBag.Product5 = HttpContext.Session.GetString("Product");
@@ -226,6 +225,7 @@ namespace WebApplication1.Controllers
             HttpContext.Session.SetString("Product", JsonSerializer.Serialize(dictionary));
             return RedirectToAction("AddProduct");
         }
+        */
 
         public IActionResult SignUp()
         {
@@ -243,7 +243,6 @@ namespace WebApplication1.Controllers
 
                 if (model.ValidationErrors.Where(p => p.Value != null).Count() == 0)
                 {
-                    // íåìàº ïîìèëîê âàë³äàö³¿ - ðåºñòðóºìî ó ÁÄ
                     String salt = _hashService.Digest(Guid.NewGuid().ToString())[..20];
                     _dataContext.Users.Add(new()
                     {

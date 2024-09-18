@@ -33,7 +33,7 @@ builder.Services.AddSession(options =>
 // Реєстрація контекста даних
 builder.Services.AddDbContext<DataContext>( options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("LocalDb")
+        builder.Configuration.GetConnectionString("LocalBD")
         )
 );
 
